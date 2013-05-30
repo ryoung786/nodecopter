@@ -1,6 +1,5 @@
 // var arDrone = require('ar-drone');
 var cv = require('opencv');
-var _ = require("underscore");
 
 var client = arDrone.createClient();
 
@@ -34,6 +33,9 @@ stream.on('data', function(png) {
 //     console.log("decision: " + imgDecision(img));
 // })
 
+// if 0, go straight
+// if < 0, turn left
+// if > 0, turn right
 function imgDecision(img) {
     var threshold = 5;
     img.canny(5,300);
@@ -69,5 +71,5 @@ function imgDecision(img) {
     if (straight) {
     	return 0;
     }
-    return avg1 - avg2 > 0; // if true, turn left, if false, turn right
+    return avg1 - avg2;
 }
