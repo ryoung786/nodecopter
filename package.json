@@ -1,0 +1,24 @@
+{
+	"name": "line-challendg",
+	"description": "AR.Drone Line challenge, jsconf '13",
+	"version": "0.0.1",
+	"homepage": "http://jquerymobile.com",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ryoung786/nodecopter.git"
+	},
+	"licenses": [
+	],
+	"dependencies": {
+		"ar-drone": "latest"
+	},
+	"devDependencies": {
+
+	},
+	"engines": {
+		"node": ">= 0.8.0"
+	},
+	"scripts": {
+	},
+	"keywords": []
+}
