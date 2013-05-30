@@ -1,4 +1,6 @@
 var arDrone = require('ar-drone');
+var opencv = require('opencv');
+
 var client = arDrone.createClient();
 
 client.takeoff();
@@ -14,3 +16,8 @@ client
 	this.stop();
 	this.land();
     });
+
+var stream = client.getPngStream();
+
+stream.on('data', function(png) {
+});

@@ -10,7 +10,8 @@
 	"licenses": [
 	],
 	"dependencies": {
-		"ar-drone": "latest"
+		"ar-drone": "latest",
+        "opencv" : "latest"
 	},
 	"devDependencies": {
 
