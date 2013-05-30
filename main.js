@@ -1,26 +1,39 @@
-// var arDrone = require('ar-drone');
+var arDrone = require('ar-drone');
+var _ = require("underscore");
 var cv = require('opencv');
 
 var client = arDrone.createClient();
 
-client.takeoff();
+// client.takeoff();
 
-client
-    .after(5000, function() {
-	this.clockwise(0.5);
-    })
-    .after(3000, function() {
-	this.animate('flipLeft', 15);
-    })
-    .after(1000, function() {
-	this.stop();
-	this.land();
-   });
+// client
+//     .after(5000, function() {
+// 	this.clockwise(0.5);
+//     })
+//     .after(3000, function() {
+// 	this.animate('flipLeft', 15);
+//     })
+//     .after(1000, function() {
+// 	this.stop();
+// 	this.land();
+//    });
 
-var stream = client.getPngStream();
+client.config("video:video_channel", 3);
 
-stream.on('data', function(png) {
-});
+var s = new cv.ImageStream()
+s.on('data', _.throttle(function(matrix){
+    // console.log("matrix: " + matrix);
+    var decision = imgDecision(matrix);
+    if (decision == 0) {
+	console.log("straight");
+    } else if (decision < 0) {
+	console.log("left");
+    } else {
+	console.log("right");
+    }
+}, 500));
+// ardrone.createPngStream().pipe(s);
+client.getPngStream().pipe(s);
 
 // cv.readImage("example-images/out-left.png", function(err, img){
 //     console.log("decision: " + imgDecision(img));
@@ -37,9 +50,11 @@ stream.on('data', function(png) {
 // if < 0, turn left
 // if > 0, turn right
 function imgDecision(img) {
-    var threshold = 5;
+    var threshold = 10;
+    // img.save('./raw.jpg');
     img.canny(5,300);
-    img.save('./out.jpg');
+    img.houghLinesP();
+    // img.save('./processed.jpg');
 
     var line, lines = [];
     lines[0] = 20;//Math.round( Math.random() * 320 );
@@ -65,7 +80,6 @@ function imgDecision(img) {
 	}
     }
     var avg2 = sum / count;
-    console.log(avg1 + ', ' + avg2);
 
     var straight = Math.abs(avg1 - avg2) < threshold;
     if (straight) {
